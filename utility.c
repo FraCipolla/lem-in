@@ -2,6 +2,7 @@
 
 #include <unistd.h>
 #include <stdlib.h>
+#include <stdio.h>
 
 int ft_strlen(char *str)
 {
@@ -15,6 +16,45 @@ void ft_error(char *str)
 {
     write(1, str, ft_strlen(str));
     exit(1);
+}
+
+char **ft_split(char const *str, int sep)
+{
+    int size = 1;
+    for (int i = 0; str[i] == sep; i++)
+        ;
+    for (int i = 0; str[i]; i++) {
+        if (str[i] == sep) {
+            ++size;
+            while (str[i] == sep)
+                i++;
+            i--;
+        }
+    }
+    if (size == 1)
+        return NULL;
+    char **ret = malloc(sizeof(char *) * size + 1);
+    ret[size] = NULL;
+    int index = 0;
+    for (int i = 0; str[i] == sep; i++)
+        ;
+    for (int i = 0; str[i]; i++) {
+        if (str[i] != sep) {
+            int j = i;
+            while (str[j] != sep)
+                j++;
+            ret[index] = malloc(sizeof(char) * j + 1);
+            ret[index][j] = 0;
+            for (int k = 0; i < j; i++, k++) {
+                ret[index][k] = str[i];
+            }
+            i--;
+            index++;
+            if (index == size)
+                break;
+        }
+    }
+    return ret;
 }
 
 int ft_atoi(char *str)
