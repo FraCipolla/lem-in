@@ -1,5 +1,6 @@
 #include "lem-in.h"
 #include "utility.h"
+#include "nest.h"
 
 int main(int argc, char **argv)
 {

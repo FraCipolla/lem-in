@@ -11,6 +11,7 @@ typedef struct s_room {
     char *name;
     int coord_x;
     int coord_y;
+    int n_links;
     struct s_room *next;
 }   t_room;
 
