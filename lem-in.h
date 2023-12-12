@@ -11,15 +11,33 @@ typedef struct s_room {
     char *name;
     int coord_x;
     int coord_y;
-    int is_free;
     struct s_room *next;
-    struct s_room *exit;
 }   t_room;
 
 typedef struct s_links {
     char *name1;
     char *name2;
-    struct s_room *next;
+    struct s_links *next;
 }   t_links;
 
-int parse_file(char *path, t_room *rooms, t_links *links);
+typedef struct s_ant {
+    int id;
+    struct s_room *path;
+}   t_ant;
+
+typedef struct s_file {
+    char *line;
+    struct s_file *next;
+}   t_file;
+
+typedef struct s_data {
+    int n_rooms;
+    int n_ants;
+    int n_links;
+    struct s_room *end;
+    struct s_room *start;
+    struct s_room *rooms;
+    struct s_file *input;
+}   t_data;
+
+t_data *parse_file(char *path);

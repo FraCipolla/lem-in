@@ -4,6 +4,18 @@
 #include <stdlib.h>
 #include <stdio.h>
 
+char *ft_strdup(char *str)
+{
+    char *ret = malloc(sizeof(char) * ft_strlen(str) + 1);
+    int i = 0;
+    while (str[i] && str[i] != '\n') {
+        ret[i] = str[i];
+        ++i;
+    }
+    ret[i] = 0;
+    return ret;
+}
+
 int ft_strlen(char *str)
 {
     char *ptr = str;
@@ -73,4 +85,15 @@ int ft_atoi(char *str)
     if (*str != 0 && *str != '\n')
         ft_error("Error, number of ants is not a number\n");
     return (ret * sign);
+}
+
+int ft_strcmp(char *s1, char *s2)
+{
+    while (*s1 && *s2) {
+        if (*s1 != *s2)
+            return *s1 - *s2;
+        s1++;
+        s2++;
+    }
+    return 0;
 }
