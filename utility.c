@@ -43,8 +43,12 @@ char **ft_split(char const *str, int sep)
             i--;
         }
     }
-    if (size == 1)
-        return NULL;
+    if (size == 1) {
+        char **ret = malloc(sizeof(char *) * 2);
+        ret[0] = ft_strdup((char *)str);
+        ret[1] = NULL;
+        return ret;
+    }
     char **ret = malloc(sizeof(char *) * size + 1);
     ret[size] = NULL;
     int index = 0;
@@ -96,4 +100,14 @@ int ft_strcmp(char *s1, char *s2)
         s2++;
     }
     return 0;
+}
+
+void free_matrix(char **args)
+{
+    while (args && *args) {
+        free(*args);
+        args++;
+    }
+    // free(args);
+    args = NULL;
 }

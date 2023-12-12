@@ -1,8 +1,23 @@
 #include "lem-in.h"
 #include "utility.h"
 
-void add_room(t_room **rooms, char **args)
+t_data *init_data() {
+    t_data *ret = malloc(sizeof(t_data));
+    ret->n_rooms = 0;
+    ret->n_ants = 0;
+    ret->n_links = 0;
+    ret->end = NULL;
+    ret->start = NULL;
+    ret->rooms = NULL;
+    ret->input = NULL;
+    return ret;
+}
+
+void add_room(t_room **rooms, char **args, int *n_rooms)
 {
+    if (!args[1])
+        return ;
+    (*n_rooms)++;
     t_room *new = malloc(sizeof(t_room));
     new->name = malloc(sizeof(ft_strlen(args[0])) + 1);
     for (int i = 0; i < ft_strlen(args[0]); i++) {
@@ -23,18 +38,6 @@ void add_room(t_room **rooms, char **args)
     }
 }
 
-t_data *init_data() {
-    t_data *ret = malloc(sizeof(t_data));
-    ret->n_rooms = 0;
-    ret->n_ants = 0;
-    ret->n_links = 0;
-    ret->end = NULL;
-    ret->start = NULL;
-    ret->rooms = NULL;
-    ret->input = NULL;
-    return ret;
-}
-
 void add_line(t_file **head, char *buff)
 {
     t_file *new = malloc(sizeof(t_file));
@@ -44,6 +47,57 @@ void add_line(t_file **head, char *buff)
     while (tmp->next)
         tmp = tmp->next;
     tmp->next = new;
+}
+
+void add_link(t_links **link, char **args, int *n_links)
+{
+    if (!args[1])
+        return ;
+    (*n_links)++;
+    t_links *new = malloc(sizeof(t_links));
+    new->name1 = ft_strdup(args[0]);
+    new->name2 = ft_strdup(args[1]);
+    new->next = NULL;
+    if (*link == NULL) {
+        *link = new;
+    } else {
+        t_links *tmp = *link;
+        while (tmp->next)
+            tmp = tmp->next;
+        tmp->next = new;
+    }
+}
+
+char **check_case(char *str, int *s)
+{
+    if (!ft_strcmp(str, "##start")) {
+        *s = 0;
+        return NULL;
+    }
+    else if (!ft_strcmp(str, "##end")) {
+        *s = 1;
+        return NULL;
+    }
+    else if (str[0] == '#' || str[0] == 'L') {
+        *s = 2;
+        return NULL;
+    }
+    char **splitted = ft_split(str, ' ');
+    if (splitted[1] && splitted[2]) {
+        if (atoi(splitted[1]) && atoi(splitted[2])) {
+            *s = 3;
+            return splitted;
+        }
+    }
+    free_matrix(splitted);
+    splitted = ft_split(str, '-');
+    if (splitted[0] && splitted[1]) {
+        *s = 4;
+        return splitted;
+    }
+    free_matrix(splitted);
+    *s = -1;
+    return NULL;
 }
 
 t_data *parse_file(char *path)
@@ -74,18 +128,35 @@ t_data *parse_file(char *path)
             break ;
         else if (buff[i] == '\n') {
             buff[i] = 0;
-            if (is_start) {
-                add_room(&data->start, ft_split(buff, ' '));
-                is_start = 0;
-            }
-            if (is_end) {
-                add_room(&data->end, ft_split(buff, ' '));
-                is_end = 0;
-            }
-            if (!ft_strcmp(buff, "##start"))
+            int s = 0;
+            char **args = check_case(buff, &s);
+            switch (s)
+            {
+            case 0: // ##start
                 is_start = 1;
-            if (!ft_strcmp(buff, "##end"))
+                break;
+            case 1: // ##end
                 is_end = 1;
+                break;
+            case 2: // comment
+                break;
+            case 3: // room
+                if (is_start) {
+                    add_room(&data->start, args, &data->n_rooms);
+                    is_start = 0;
+                } else if (is_end) {
+                    add_room(&data->end, args, &data->n_rooms);
+                    is_end = 0;
+                } else {
+                    add_room(&data->rooms, args, &data->n_rooms);
+                }
+                break;
+            case 4: // link
+                add_link(&data->links, args, &data->n_links);
+                break;
+            default:
+                break;
+            }
             add_line(&head, buff);
             for (int j = 0; j < 128; j++) {
                 buff[j] = 0;

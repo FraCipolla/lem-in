@@ -38,6 +38,7 @@ typedef struct s_data {
     struct s_room *start;
     struct s_room *rooms;
     struct s_file *input;
+    struct s_links *links;
 }   t_data;
 
 t_data *parse_file(char *path);
