@@ -2,11 +2,17 @@
 
 #include "lem-in.h"
 
+enum Type {
+    START,
+    ROOM,
+    END
+};
+
 typedef struct s_nest {
     char *name;
+    enum Type type;
     int is_free;
-    int shortest;
-    int longest;
+    int dist;
     struct s_nest **nodes;
 }   t_nest;
 
