@@ -47,4 +47,4 @@ typedef struct s_data {
     struct s_links *links;
 }   t_data;
 
-t_data *parse_file(char *path);
+t_data *read_map();

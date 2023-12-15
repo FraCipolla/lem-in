@@ -2,11 +2,9 @@
 #include "utility.h"
 #include "nest.h"
 
-int main(int argc, char **argv)
+int main()
 {
-    if (argc != 2)
-        ft_error("error: needs 1 arguments\n");
-    t_data *data = parse_file(argv[1]);
+    t_data *data = read_map();
     t_file* tmp = data->input;
     while (tmp) {
         printf("%s\n", tmp->line);

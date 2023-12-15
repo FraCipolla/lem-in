@@ -98,13 +98,12 @@ char **check_case(char *str, int *s)
     return NULL;
 }
 
-t_data *parse_file(char *path)
+t_data *read_map()
 {
-    int fd = open(path, O_RDONLY);
     char buff[128];
     int n_bytes = 0;
     for (int i = 0; ; i++) {
-        n_bytes = read(fd, buff + i, 1);
+        n_bytes = read(0, buff + i, 1);
         if (buff[i] == '\n' || buff[i] == '\0' || n_bytes <= 0)
             break;   
     }
@@ -116,12 +115,12 @@ t_data *parse_file(char *path)
     head->line = ft_strdup(buff);
     if (data->n_ants <= 0) 
         ft_error("error: number of ants should be positive\n");
-    for (int i = 0; i < sizeof(buff); i++)
+    for (int i = 0; i < n_bytes; i++)
         buff[i] = 0;
     int is_start = 0;
     int is_end = 0;
     for (int i = 0; ; i++) {
-        n_bytes = read(fd, buff + i, 1);
+        n_bytes = read(0, buff + i, 1);
         if (buff[i] == '\0' || n_bytes <= 0)
             break ;
         else if (buff[i] == '\n') {
@@ -164,6 +163,5 @@ t_data *parse_file(char *path)
     }
     add_line(&head, buff);
     data->input = head;
-    close(fd);
     return data;
 }
