@@ -6,14 +6,12 @@ t_data *init_data() {
     ret->n_rooms = 0;
     ret->n_ants = 0;
     ret->n_links = 0;
-    ret->end = NULL;
-    ret->start = NULL;
     ret->rooms = NULL;
     ret->input = NULL;
     return ret;
 }
 
-void add_room(t_room **rooms, char **args, int *n_rooms)
+void add_room(t_room **rooms, char **args, int *n_rooms, enum Type type)
 {
     if (!args[1])
         return ;
@@ -26,7 +24,7 @@ void add_room(t_room **rooms, char **args, int *n_rooms)
     new->coord_x = ft_atoi(args[1]);
     new->coord_y = ft_atoi(args[2]);
     new->next = NULL;
-
+    new->type = type;
     if (*rooms == NULL) {
         *rooms = new;
     } else {
@@ -142,13 +140,13 @@ t_data *parse_file(char *path)
                 break;
             case 3: // room
                 if (is_start) {
-                    add_room(&data->start, args, &data->n_rooms);
+                    add_room(&data->rooms, args, &data->n_rooms, START);
                     is_start = 0;
                 } else if (is_end) {
-                    add_room(&data->end, args, &data->n_rooms);
+                    add_room(&data->rooms, args, &data->n_rooms, END);
                     is_end = 0;
                 } else {
-                    add_room(&data->rooms, args, &data->n_rooms);
+                    add_room(&data->rooms, args, &data->n_rooms, ROOM);
                 }
                 break;
             case 4: // link

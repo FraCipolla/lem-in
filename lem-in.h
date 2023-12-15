@@ -7,11 +7,18 @@
 #include <fcntl.h>
 #include <stdio.h>
 
+enum Type {
+    START,
+    ROOM,
+    END
+};
+
 typedef struct s_room {
     char *name;
     int coord_x;
     int coord_y;
     int n_links;
+    enum Type type;
     struct s_room *next;
 }   t_room;
 
@@ -35,8 +42,6 @@ typedef struct s_data {
     int n_rooms;
     int n_ants;
     int n_links;
-    struct s_room *end;
-    struct s_room *start;
     struct s_room *rooms;
     struct s_file *input;
     struct s_links *links;

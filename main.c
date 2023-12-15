@@ -28,5 +28,6 @@ int main(int argc, char **argv)
     //     printf("link1: %s link2: %s\n", links->name1, links->name2);
     //     links = links->next;
     // }
+    build_nest(&data);
     return 0;
 }
