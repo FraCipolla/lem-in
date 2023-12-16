@@ -107,23 +107,18 @@ void calculate_complexity(t_nest **nest, int deep, char ***skip, int index)
     }
     t_nest **nodes = (*nest)->nodes;
 
-    for (int j = 0; nodes[j]; j++) {
         for (int i = 0; nodes[i]; i++) {
             if (check_skip(skip, nodes[i]->name, index)) {
                 continue;
             }
             if (nodes[i]->dist == 0 || deep < nodes[i]->dist) {
                 nodes[i]->dist = deep;
+                (*skip)[index] = ft_strdup(nodes[i]->name);
+                index++;
+                (*skip)[index] = NULL;
+                calculate_complexity(&nodes[i], deep + 1, skip, index);
             }
         }
-        if (check_skip(skip, nodes[j]->name, index)) {
-                continue;
-            } else {
-                (*skip)[index] = ft_strdup(nodes[j]->name);
-                index++;
-                calculate_complexity(&nodes[j], deep + 1, skip, index);
-            }
-    }
 }
 
 t_nest *build_nest(t_data **data)
