@@ -5,7 +5,7 @@
 
 void migrate(t_nest **start, int n_ants)
 {
-    int end = 0, wait = 0;
+    int end = 0;
     t_ant ants[n_ants];
     t_nest *min = NULL;
 
@@ -21,35 +21,45 @@ void migrate(t_nest **start, int n_ants)
             int n_nodes = (int)ants[i].current->n_nodes;
             min = NULL;
             int k = -1;
-            int abs_min = INT_MAX;
             while (++k < n_nodes) {
                 if (sub_nest[k]->dist == -1) {
                     continue;
                 }
-                if (sub_nest[k]->dist < abs_min) {
-                    abs_min = sub_nest[k]->dist;
-                }
-                if (sub_nest[k]->dist <= abs_min && sub_nest[k]->ant_id == -1) {
+                if (sub_nest[k]->type == END) {
                     min = sub_nest[k];
+                    break;
+                }
+                if (!min && sub_nest[k]->ant_id == -1) {
+                    min = sub_nest[k];
+                    min->waiting_list++;
+                } else if (min && sub_nest[k]->ant_id == -1 && sub_nest[k]->dist <= min->dist) {
+                    min->waiting_list--;
+                    sub_nest[k]->waiting_list++;
+                    min = sub_nest[k];
+                } else if (min && (sub_nest[k]->dist + sub_nest[k]->waiting_list) < min->dist) {
+                    min->waiting_list--;
+                    min = sub_nest[k];
+                    min->waiting_list++;
+                    k = -1;
                 }
             }
-            if (!min)
+            if (!min) {
                 continue;
+            }
             if (min->type == END) {
                 printf("L%d-%s ",ants[i].id, min->name);
-                ants[i].current->ant_id = -1;
-                ants[i].current = min;
                 ++end;
-            } else if (abs_min + wait < min->dist) {
-                wait++;
+                ants[i].current->ant_id = -1;
+                ants[i].current->waiting_list = 0;
+                ants[i].current = min;
             } else if (min->ant_id == -1) {
                 printf("L%d-%s ",ants[i].id, min->name);
-                min->ant_id = ants[i].id;
                 ants[i].current->ant_id = -1;
+                ants[i].current->waiting_list = 0;
+                min->ant_id = ants[i].id;
                 ants[i].current = min;
             }
         }
-        wait = 0;
         printf("\n");
     }
     for (int i = 0; i < n_ants; i++)
@@ -67,6 +77,5 @@ int main()
     t_nest *nest = build_nest(&data);
     printf("\n");
     migrate(&nest, data->n_ants);
-    
     return 0;
 }

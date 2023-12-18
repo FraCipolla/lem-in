@@ -59,7 +59,7 @@ void print_nest(t_nest **nest_arr)
         for (int j = 0; nest_arr[i]->nodes[j]; j++) {
             printf("%s ", nest_arr[i]->nodes[j]->name);
         }
-        printf("complexity: %d\n", nest_arr[i]->dist);
+        printf("\ncomplexity: %d\n\n", nest_arr[i]->dist);
     }
 }
 
@@ -78,6 +78,7 @@ t_nest **nest_init(t_data **data)
         new[i]->name = ft_strdup(rooms->name);
         new[i]->dist = -1;
         new[i]->ant_id = -1;
+        new[i]->waiting_list = 0;
         new[i]->type = rooms->type;
         new[i]->n_nodes = get_n_links(rooms->name, &(*data)->links);
         new[i]->nodes = malloc(sizeof(t_nest **) * new[i]->n_nodes + 1);
@@ -156,7 +157,7 @@ t_nest *build_nest(t_data **data)
     char **names = malloc(sizeof(char *) * cpy->n_rooms + 1);
     names[0] = ft_strdup(end->name);
     calculate_complexity(&end, 1, &names, 1);
-    // print_nest(nest_arr);
+    print_nest(nest_arr);
     for (int i = 0; nest_arr[i]; i++) {
         if (nest_arr[i]->type == START)
             return nest_arr[i];

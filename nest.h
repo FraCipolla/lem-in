@@ -7,6 +7,7 @@ typedef struct s_nest {
     enum Type type;
     size_t n_nodes;
     int ant_id;
+    int waiting_list;
     int dist;
     struct s_nest **nodes;
 }   t_nest;
