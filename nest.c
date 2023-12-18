@@ -76,7 +76,7 @@ t_nest **nest_init(t_data **data)
             return NULL;
         }
         new[i]->name = ft_strdup(rooms->name);
-        new[i]->dist = 0;
+        new[i]->dist = -1;
         new[i]->is_free = 0;
         new[i]->type = rooms->type;
         new[i]->n_nodes = get_n_links(rooms->name, &(*data)->links);
@@ -107,18 +107,18 @@ void calculate_complexity(t_nest **nest, int deep, char ***skip, int index)
     }
     t_nest **nodes = (*nest)->nodes;
 
-        for (int i = 0; nodes[i]; i++) {
-            if (check_skip(skip, nodes[i]->name, index)) {
-                continue;
-            }
-            if (nodes[i]->dist == 0 || deep < nodes[i]->dist) {
-                nodes[i]->dist = deep;
-                (*skip)[index] = ft_strdup(nodes[i]->name);
-                index++;
-                (*skip)[index] = NULL;
-                calculate_complexity(&nodes[i], deep + 1, skip, index);
-            }
+    for (int i = 0; nodes[i]; i++) {
+        if (check_skip(skip, nodes[i]->name, index)) {
+            continue;
         }
+        if (nodes[i]->dist == -1 || deep < nodes[i]->dist) {
+            nodes[i]->dist = deep;
+            (*skip)[index] = ft_strdup(nodes[i]->name);
+            index++;
+            (*skip)[index] = NULL;
+            calculate_complexity(&nodes[i], deep + 1, skip, index);
+        }
+    }
 }
 
 t_nest *build_nest(t_data **data)
@@ -132,6 +132,7 @@ t_nest *build_nest(t_data **data)
     for (int i = 0; nest_arr[i]; i++) {
         if (nest_arr[i]->type == END) {
             end = nest_arr[i];
+            end->dist = 0;
         }
         int j = 0;
         for (t_links *l = cpy->links; l; l = l->next) {
