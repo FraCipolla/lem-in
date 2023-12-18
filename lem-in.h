@@ -30,7 +30,7 @@ typedef struct s_links {
 
 typedef struct s_ant {
     int id;
-    struct s_room *path;
+    struct s_nest *current;
 }   t_ant;
 
 typedef struct s_file {
