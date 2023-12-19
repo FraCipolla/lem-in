@@ -104,7 +104,26 @@ int main()
         printf("%s\n", tmp->line);
         tmp = tmp->next;
     }
-    t_nest *nest = build_nest(&data);
+    t_nest **nest_arr = build_nest(&data);
+    t_nest *nest = NULL;
+    for (int i = 0; nest_arr[i]; i++) {
+        if (nest_arr[i]->type == START) {
+            nest = nest_arr[i];
+            break;
+        }
+    }
     migrate(&nest, data->n_ants);
+    t_file *cpy = tmp;
+    while (tmp) {
+        cpy = tmp;
+        tmp = tmp->next;
+        free(cpy);
+    }
+    for (int i = 0; nest_arr[i]; i++) {
+        free(nest_arr[i]->name);
+        free(nest_arr[i]->nodes);
+        free(nest_arr[i]);
+    }
+    free(nest_arr);
     return 0;
 }

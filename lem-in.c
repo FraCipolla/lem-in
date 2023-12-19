@@ -147,15 +147,17 @@ t_data *read_map()
                 } else {
                     add_room(&data->rooms, args, &data->n_rooms, ROOM);
                 }
+                // free_matrix(args);
                 break;
             case 4: // link
                 add_link(&data->links, args, &data->n_links);
+                free_matrix(args);
                 break;
             default:
                 break;
             }
             add_line(&head, buff);
-            for (int j = 0; j < 128; j++) {
+            for (int j = 0; j < 2048; j++) {
                 buff[j] = 0;
             }
             i = -1;

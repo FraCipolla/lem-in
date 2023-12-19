@@ -7,10 +7,12 @@ OBJ2=$(SRC2:%.c=%.o)
 CC=gcc
 CFLAGS=-Wall -Wextra -Werror
 
-all: $(NAME) $(NAME2)
+all: $(NAME)
 
 $(NAME) : $(OBJ)
 	$(CC) $(CFLAGS) -o $(NAME) $(OBJ)
+
+bonus: $(NAME2)
 
 $(NAME2) : $(OBJ2)
 	$(CC) $(CFLAGS) -o $(NAME2) $(OBJ2)
