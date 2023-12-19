@@ -60,14 +60,15 @@ void migrate(t_nest **start, int n_ants)
                     k = -1;
                     int wait = INT_MAX;
                     while (++k < n_nodes) {
-                        if (sub_nest[k]->waiting_list < wait) {
-                            wait = sub_nest[k]->waiting_list;
+                        if(sub_nest[k]->dist == -1)
+                            continue;
+                        if (sub_nest[k]->dist + sub_nest[k]->waiting_list < wait) {
+                            wait = sub_nest[k]->dist + sub_nest[k]->waiting_list;
                             min = sub_nest[k];
                         }
                     }
                     if (wait == INT_MAX)
                         continue;
-                    // continue;
                 }
                 if (min->type == END) {
                     printf("L%d-%s ",ants[i].id, min->name);
