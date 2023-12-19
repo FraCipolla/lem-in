@@ -100,7 +100,7 @@ char **check_case(char *str, int *s)
 
 t_data *read_map()
 {
-    char buff[128];
+    char buff[2048];
     int n_bytes = 0;
     for (int i = 0; ; i++) {
         n_bytes = read(0, buff + i, 1);

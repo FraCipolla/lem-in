@@ -157,7 +157,7 @@ t_nest *build_nest(t_data **data)
     char **names = malloc(sizeof(char *) * cpy->n_rooms + 1);
     names[0] = ft_strdup(end->name);
     calculate_complexity(&end, 1, &names, 1);
-    print_nest(nest_arr);
+    // print_nest(nest_arr);
     for (int i = 0; nest_arr[i]; i++) {
         if (nest_arr[i]->type == START)
             return nest_arr[i];
